@@ -2,6 +2,7 @@ package main.com.product.repository;
 
 import main.com.config.MySqlSessionFactory;
 import main.com.product.domain.Product;
+import main.com.product.domain.SearchDTO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -35,10 +36,10 @@ public class MySqlProductRepository implements ProductRepository{
     }
 
     @Override
-    public List<Product> findBySupplyName(String supplyName) {
+    public List<Product> findProduct(SearchDTO searchDTO) {
         SqlSession sqlSession = MySqlSessionFactory.openSession();
         try {
-            List<Product> products= sqlSession.selectList("mapper.product.findBySupplyName",supplyName);
+            List<Product> products= sqlSession.selectList("mapper.product.findProduct",searchDTO);
             return products;
         }
         finally{
@@ -47,11 +48,12 @@ public class MySqlProductRepository implements ProductRepository{
         }
     }
 
+
     @Override
     public Long save(Product product) {
         SqlSession sqlSession = MySqlSessionFactory.openSession();
         try {
-            int success = sqlSession.insert("mapper.product.insert", product);
+            sqlSession.insert("mapper.product.insert", product);
             sqlSession.commit();
             return product.getId();
         }
@@ -65,7 +67,7 @@ public class MySqlProductRepository implements ProductRepository{
     public List<Long> save(List<Product> products) {
         SqlSession sqlSession = MySqlSessionFactory.openSession();
         try {
-            int success = sqlSession.insert("mapper.product.insertList", products);
+            sqlSession.insert("mapper.product.insertList", products);
             sqlSession.commit();
             return products.stream().map(Product::getId).collect(Collectors.toList());
         }
