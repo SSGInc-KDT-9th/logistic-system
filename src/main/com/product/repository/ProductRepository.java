@@ -9,6 +9,8 @@ public interface ProductRepository {
     List<Product> findByName(String name);
     List<Product> findBySupplyName(String supplyName);
     Long save(Product product);
+
+    List<Long> save(List<Product> products);
     Long update(Product product);
     void delete(Product product);
     List<Long> delete(List<Product> products);
