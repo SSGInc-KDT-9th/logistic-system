@@ -9,6 +9,7 @@
         <result column="product_name" property="productName"/>
         <result column="category_id" property="categoryId"/>
         <result column="supplier_id" property="supplierId"/>
+        <result column="company_name" property="supplyName"/>
         <result column="supply_price" property="supplyPrice"/>
         <result column="selling_price" property="sellingPrice"/>
         <result column="stock" property="stock" jdbcType="INTEGER"/>
@@ -32,10 +33,18 @@
         WHERE product_name LIKE CONCAT('%', #{productName}, '%')
     </select>
 
-    <select id="findBySupplyName" resultMap="productMap" parameterType="String">
-        SELECT id,product_name,category_id,supplier_id,supply_price,selling_price,stock
-        FROM product
-        WHERE product_name LIKE CONCAT('%', #{supplyName}, '%')
+    <select id="findProduct" resultMap="productMap" parameterType="main.com.product.domain.SearchDTO">
+        SELECT p.id,p.product_name,p.category_id,p.supplier_id,sc.company_name,p.supply_price,p.selling_price,p.stock
+        FROM product as p join supllier_company as sc  on p.supplier_id = sc.id
+        <if test="id != null and id!=''">
+            AND p.product_id = #{id}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND p.product_name = #{productName}
+        </if>
+        <if test="supplyName != null and supplyName != ''">
+            AND sc.company_name = #{supplyName}
+        </if>
     </select>
 
 <!--INSERT-->
