@@ -1,20 +1,19 @@
 package main.com.product.repository;
 
 import main.com.product.domain.Product;
-import main.com.product.domain.SearchDTO;
+import main.com.product.response.ProductInfo;
+import main.com.product.request.ProductSearch;
 
 import java.util.List;
 
 public interface ProductRepository {
     Product findById(Long id);
     List<Product> findByName(String name);
-    List<Product> findProduct(SearchDTO searchDTO);
+    List<ProductInfo> findProduct(ProductSearch searchDTO);
     Long save(Product product);
-
     List<Long> save(List<Product> products);
     Long update(Product product);
-    void delete(Product product);
-    List<Long> delete(List<Product> products);
-
+    void delete(Long product);
+    List<Long> delete(List<Long> products);
     void deleteAll();
 }
