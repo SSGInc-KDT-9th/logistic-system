@@ -2,7 +2,8 @@ package main.com.product.repository;
 
 import main.com.config.MySqlSessionFactory;
 import main.com.product.domain.Product;
-import main.com.product.domain.SearchDTO;
+import main.com.product.response.ProductInfo;
+import main.com.product.request.ProductSearch;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -36,10 +37,10 @@ public class MySqlProductRepository implements ProductRepository{
     }
 
     @Override
-    public List<Product> findProduct(SearchDTO searchDTO) {
+    public List<ProductInfo> findProduct(ProductSearch search) {
         SqlSession sqlSession = MySqlSessionFactory.openSession();
         try {
-            List<Product> products= sqlSession.selectList("mapper.product.findProduct",searchDTO);
+            List<ProductInfo> products= sqlSession.selectList("mapper.product.findProduct",search);
             return products;
         }
         finally{
@@ -79,14 +80,23 @@ public class MySqlProductRepository implements ProductRepository{
 
     @Override
     public Long update(Product product) {
-        return null;
+        SqlSession sqlSession = MySqlSessionFactory.openSession();
+        try {
+            sqlSession.update("mapper.product.update", product);
+            sqlSession.commit();
+            return product.getId();
+        }
+        finally{
+            sqlSession.rollback();
+            sqlSession.close();
+        }
     }
 
     @Override
-    public void delete(Product product) {
+    public void delete(Long productId) {
         SqlSession sqlSession = MySqlSessionFactory.openSession();
         try {
-            int success = sqlSession.insert("mapper.product.delete", product.getId());
+            int success = sqlSession.insert("mapper.product.delete", productId);
             sqlSession.commit();
         }
         finally{
@@ -96,13 +106,12 @@ public class MySqlProductRepository implements ProductRepository{
     }
 
     @Override
-    public List<Long> delete(List<Product> products) {
+    public List<Long> delete(List<Long> productIds) {
         SqlSession sqlSession = MySqlSessionFactory.openSession();
         try {
-            List<Long> ids = products.stream().map(Product::getId).collect(Collectors.toList());
-            sqlSession.delete("mapper.product.deleteList", ids);
+            sqlSession.delete("mapper.product.deleteList", productIds);
             sqlSession.commit();
-            return ids;
+            return productIds;
         }
         finally{
             sqlSession.rollback();
