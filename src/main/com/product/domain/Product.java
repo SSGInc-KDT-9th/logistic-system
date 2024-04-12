@@ -7,26 +7,32 @@ import lombok.ToString;
 
 @Getter
 @ToString
-@RequiredArgsConstructor
 public class Product {
     private Long id;
-    private String productName;
     private Long categoryId;
     private Long supplierId;
-    private String supplyName;
-    private int supplyPrice;
-    private int sellingPrice;
-    private int stock;
-
+    private String supplierName;
+    private String productName;
 
     @Builder
-    public Product(String productName, Long categoryId, Long supplierId, String supplyName, int supplyPrice, int sellingPrice, int stock) {
-        this.productName = productName;
+    public Product(Long categoryId, Long supplierId, String supplierName, String productName) {
         this.categoryId = categoryId;
         this.supplierId = supplierId;
-        this.supplyName = supplyName;
-        this.supplyPrice = supplyPrice;
-        this.sellingPrice = sellingPrice;
-        this.stock = stock;
+        this.supplierName = supplierName;
+        this.productName = productName;
+    }
+
+    public ProductEdit.ProductEditBuilder toEditor(){
+        return ProductEdit.builder()
+                .categoryId(categoryId)
+                .supplierId(supplierId)
+                .supplierName(supplierName)
+                .productName(productName);
+    }
+
+    public void edit(ProductEdit editor){
+        categoryId = editor.getCategoryId();
+        supplierId = editor.getSupplierId();
+        productName = editor.getProductName();
     }
 }
