@@ -32,6 +32,6 @@
           
           
            <!-- Mapper.xml 등록-->
-    <mapper resource="com.config.cc.ClientMapper.xml"/>
+    <mapper resource="com/config/cc/ClientMapper.xml"/>
   </mappers>
 </configuration>

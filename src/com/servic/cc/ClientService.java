@@ -10,7 +10,7 @@ public interface ClientService {
 	
 	public void setDao(ClientDAO dao);
 	public List<ClientDTO> findAll();
-	
+	public int removeByid(int id);
 
 	
 	
