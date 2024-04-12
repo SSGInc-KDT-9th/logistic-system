@@ -8,8 +8,6 @@
     <properties resource="main/resource/config/jdbc.properties"/>
     <typeAliases>
         <typeAlias alias="Member" type="main.com.member.domain.Member"/>
-        <typeAlias alias="Product" type="main.com.product.domain.Product"/>
-        <typeAlias alias="ProductInfo" type="main.com.product.response.ProductInfo"/>
     </typeAliases>
     <environments default="development">
         <environment id="development">
@@ -26,7 +24,6 @@
     <mappers>
         <!-- DeptMapper.xml 등록 -->
         <mapper resource="main/resource/mapper/MemberMapper.xml"/>
-        <mapper resource="main/resource/mapper/product/ProductMapper.xml"/>
     </mappers>
 </configuration>
 

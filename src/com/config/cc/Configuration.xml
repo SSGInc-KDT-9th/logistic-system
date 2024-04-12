@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!-- jdbc.properties 등록 -->
+<properties resource="com/config/cc/jdbc.properties"></properties>
+ 
+ 
+ <!-- DTO 별칭-->
+ <typeAliases>
+<typeAlias type="com.dto.cc.ClientDTO" alias="ClientDTO" />
+ </typeAliases>
+ 
+ 
+ <!-- 키값참조 제이디비씨점 프로포티지 등록된 값을 참조-->
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+      
+      <!-- jdbc.properties 등록된 값을 참조: ${key} -->
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.userid}"/>
+        <property name="password" value="${jdbc.passwd}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+          
+          
+           <!-- Mapper.xml 등록-->
+    <mapper resource="com/config/cc/ClientMapper.xml"/>
+  </mappers>
+</configuration>
