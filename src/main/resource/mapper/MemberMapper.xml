@@ -9,7 +9,7 @@
         FROM member
     </select>
 
-    <select id="findByMemberId" parameterType="String" resultType="Student">
+    <select id="findByMemberId" parameterType="String" resultType="Member">
         SELECT id,member_name,member_id,member_role
         FROM member
         WHERE member_id = #{member_id}
