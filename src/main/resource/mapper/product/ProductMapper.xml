@@ -4,67 +4,72 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.product">
-    <resultMap id="productMap" type="Product">
+    <resultMap id="ProductInfoMap" type="ProductInfo">
         <id column="id" property="id" jdbcType="BIGINT" javaType="Long"/>
         <result column="product_name" property="productName"/>
         <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
         <result column="supplier_id" property="supplierId"/>
-        <result column="company_name" property="supplyName"/>
-        <result column="supply_price" property="supplyPrice"/>
+        <result column="company_name" property="SupplierName"/>
+        <result column="store_price" property="supplyPrice"/>
         <result column="selling_price" property="sellingPrice"/>
-        <result column="stock" property="stock" jdbcType="INTEGER"/>
+        <result column="inventory" property="inventory"/>
+    </resultMap>
+
+    <resultMap id="ProductMap" type="Product">
+        <id column="id" property="id" jdbcType="BIGINT" javaType="Long"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="supplier_name" property="supplierName"/>
+        <result column="product_name" property="productName"/>
     </resultMap>
 
 <!--SELECT-->
-    <select id="findAll" resultMap="productMap">
+    <select id="findAll" resultMap="ProductMap">
         SELECT *
         FROM product
     </select>
 
-    <select id="findById" resultMap="productMap" parameterType="Long">
-        SELECT id,product_name,category_id,supplier_id,supply_price,selling_price,stock
+    <select id="findById" resultMap="ProductMap" parameterType="Long">
+        SELECT id,category_id,supplier_id,product_name
         FROM product
         WHERE id = #{id}
     </select>
 
-    <select id="findByName" resultMap="productMap" parameterType="String">
-        SELECT id,product_name,category_id,supplier_id,supply_price,selling_price,stock
+    <select id="findByName" resultMap="ProductMap" parameterType="String">
+        SELECT id,category_id,supplier_id,product_name
         FROM product
         WHERE product_name LIKE CONCAT('%', #{productName}, '%')
     </select>
 
-    <select id="findProduct" resultMap="productMap" parameterType="main.com.product.domain.SearchDTO">
-        SELECT p.id,p.product_name,p.category_id,p.supplier_id,sc.company_name,p.supply_price,p.selling_price,p.stock
-        FROM product as p join supllier_company as sc  on p.supplier_id = sc.id
+    <select id="findProduct" resultMap="ProductInfoMap" parameterType="main.com.product.request.ProductSearch">
+        SELECT p.id,p.product_name,p.category_id,pc.category_name,p.supplier_id,p.supplier_name,s.store_price,s.inventory
+        FROM (product as p join product_category as pc on p.category_id = pc.id)
+        JOIN stock as s ON p.id = s.product_id
         <if test="id != null and id!=''">
             AND p.product_id = #{id}
         </if>
         <if test="productName != null and productName != ''">
-            AND p.product_name = #{productName}
+            AND p.product_name LIKE CONCAT('%', #{productName}, '%')
         </if>
-        <if test="supplyName != null and supplyName != ''">
-            AND sc.company_name = #{supplyName}
+        <if test="supplierName != null and supplierName != ''">
+            AND p.supplier_name LIKE CONCAT('%', #{supplierName}, '%')
         </if>
     </select>
 
 <!--INSERT-->
     <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO product (product_name,category_id,supplier_id,supply_price,selling_price,stock)
-        VALUES (#{productName},#{categoryId},#{supplierId},#{supplyPrice},#{sellingPrice},#{stock})
+        INSERT INTO product (product_name,category_id,supplier_id)
+        VALUES (#{productName},#{categoryId},#{supplierId})
     </insert>
 
     <insert id="insertList" parameterType="arraylist" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO product (product_name,category_id,supplier_id,supply_price,selling_price,stock)
+        INSERT INTO product (product_name,category_id,supplier_id)
         VALUES
         <foreach item="product" collection="list" separator=",">
-            (#{product.productName},#{product.categoryId},#{product.supplierId},#{product.supplyPrice},#{product.sellingPrice},#{product.stock})
+            (#{product.productName},#{product.categoryId},#{product.supplierId})
         </foreach>
     </insert>
-
-    <select id="lastInsertId" parameterType="java.util.List" resultType="Long">
-        <!-- Retrieve the generated IDs for all the inserted records -->
-        SELECT LAST_INSERT_ID();
-    </select>
 
 <!--DELETE-->
     <delete id="delete" parameterType="Long" >
@@ -85,5 +90,15 @@
     </delete>
 
 <!--UPDATE-->
+    <update id="update" parameterType="Product">
+        UPDATE product
+        SET category_id = #{categoryId}, supplier_id = #{supplierId}, supplier_name = #{supplierName} ,product_name = #{productName}
+        WHERE id = #{id}
+    </update>
 
+    <update id="updateStock" parameterType="Product">
+        UPDATE product
+        SET stock = #{stock}
+        WHERE product_id = #{id}
+    </update>
 </mapper>
