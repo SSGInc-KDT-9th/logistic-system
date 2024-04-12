@@ -8,6 +8,7 @@
     <properties resource="main/resource/config/jdbc.properties"/>
     <typeAliases>
         <typeAlias alias="Member" type="main.com.member.domain.Member"/>
+        <typeAlias type="com.dto.ClientCompanyDTO" alias="ClientCompanyDTO" />
     </typeAliases>
     <environments default="development">
         <environment id="development">
