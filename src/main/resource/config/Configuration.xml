@@ -8,6 +8,9 @@
     <properties resource="main/resource/config/jdbc.properties"/>
     <typeAliases>
         <typeAlias alias="Member" type="main.com.member.domain.Member"/>
+        <typeAlias type="com.dto.ClientCompanyDTO" alias="ClientCompanyDTO" />
+        <typeAlias type="main.com.product.domain.Product" alias="Product"/>
+        <typeAlias type="main.com.product.response.ProductInfo" alias="ProductInfo"/>
     </typeAliases>
     <environments default="development">
         <environment id="development">
@@ -26,4 +29,3 @@
         <mapper resource="main/resource/mapper/MemberMapper.xml"/>
     </mappers>
 </configuration>
-
