@@ -95,10 +95,4 @@
         SET category_id = #{categoryId}, supplier_id = #{supplierId}, supplier_name = #{supplierName} ,product_name = #{productName}
         WHERE id = #{id}
     </update>
-
-    <update id="updateStock" parameterType="Product">
-        UPDATE product
-        SET stock = #{stock}
-        WHERE product_id = #{id}
-    </update>
 </mapper>
